@@ -1,30 +1,60 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Food : MonoBehaviour
 {
+    public GameObject massGainerPrefab;
+    public GameObject massBurnerPrefab;
     public BoxCollider2D gridArea;
+    public SnakeController snakeController;
+
+    public float spawnInterval = 3f;
+    public float foodLifetime = 5f;
 
     private void Start()
     {
-        RandomizePosition();
+        StartCoroutine(SpawnFood());
     }
 
-    private void RandomizePosition()
+    private IEnumerator SpawnFood()
     {
-        Bounds bounds = this.gridArea.bounds;   
+        while (true)
+        {
+            yield return new WaitForSeconds(spawnInterval);
+
+            if (snakeController.GetSegmentCount() > 1)
+            {
+                if (Random.value > 0.5f)
+                {
+                    SpawnFoodItem(massGainerPrefab);
+                }
+                else
+                {
+                    SpawnFoodItem(massBurnerPrefab);
+                }
+            }
+            else
+            {
+                SpawnFoodItem(massGainerPrefab);
+            }
+        }
+    }
+
+    private void SpawnFoodItem(GameObject foodPrefab)
+    {
+        Bounds bounds = gridArea.bounds;
         float x = Random.Range(bounds.min.x, bounds.max.x);
         float y = Random.Range(bounds.min.y, bounds.max.y);
 
-        this.transform.position = new Vector3(Mathf.Round(x), Mathf.Round(y), 0.0f); 
+        Vector3 spawnPosition = new Vector3(Mathf.Round(x), Mathf.Round(y), 0);
+        GameObject foodItem = Instantiate(foodPrefab, spawnPosition, Quaternion.identity);
+
+        StartCoroutine(DestroyFoodAfterTime(foodItem, foodLifetime));
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private IEnumerator DestroyFoodAfterTime(GameObject foodItem, float time)
     {
-        if (other.tag == "Player")
-        {
-            RandomizePosition();
-        }
+        yield return new WaitForSeconds(time);
+        Destroy(foodItem);
     }
 }
