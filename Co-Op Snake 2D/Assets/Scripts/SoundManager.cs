@@ -2,47 +2,39 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    // Singleton instance
     public static SoundManager Instance;
 
-    // Reference to audio source for playing sounds
     private AudioSource audioSource;
 
-    // Sound Clips
     public AudioClip snakeDeathClip;
     public AudioClip pointTakenClip;
     public AudioClip backgroundMusicClip;
 
-    // Volume for background music (default to 0.5 for mid volume)
     public float backgroundMusicVolume = 0.5f;
 
     private void Awake()
     {
-        // Check if there is already an instance
         if (Instance == null)
         {
-            Instance = this; // Assign this to the static instance
-            DontDestroyOnLoad(gameObject); // Keep the SoundManager across scenes
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
-            Destroy(gameObject); // Destroy duplicate instances
+            Destroy(gameObject);
         }
 
-        // Get the AudioSource component on the same GameObject
         audioSource = GetComponent<AudioSource>();
 
-        // Optionally, start playing background music if desired
         if (backgroundMusicClip != null)
         {
             audioSource.loop = true;
             audioSource.clip = backgroundMusicClip;
-            audioSource.volume = backgroundMusicVolume; // Set the background music volume here
+            audioSource.volume = backgroundMusicVolume;
             audioSource.Play();
         }
     }
 
-    // Play the Snake Death sound
     public void PlaySnakeDeathSound()
     {
         if (snakeDeathClip != null)
@@ -51,7 +43,6 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    // Play the Point Taken sound
     public void PlayPointTakenSound()
     {
         if (pointTakenClip != null)
@@ -60,7 +51,6 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    // Optional: Play background music (can be toggled off or on)
     public void ToggleBackgroundMusic(bool isPlaying)
     {
         if (isPlaying)
@@ -79,10 +69,9 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    // Method to change background music volume
     public void SetBackgroundMusicVolume(float volume)
     {
-        backgroundMusicVolume = Mathf.Clamp(volume, 0f, 1f); // Ensure volume stays between 0 and 1
-        audioSource.volume = backgroundMusicVolume; // Adjust volume
+        backgroundMusicVolume = Mathf.Clamp(volume, 0f, 1f);
+        audioSource.volume = backgroundMusicVolume;
     }
 }
