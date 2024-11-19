@@ -7,16 +7,17 @@ TagManager:
   - Screen
   - Ball
   - Bat
+  - Apple
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Balls
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Bat
+  - Apple
+  - Post
   - 
   - 
   - 
